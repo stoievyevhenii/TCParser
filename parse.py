@@ -1,6 +1,13 @@
 # IMPORTS
-from telethon import TelegramClient, events, sync
+import subprocess
+import sys
+import sched, time
 import os
+try:
+    from telethon import TelegramClient, events, sync
+except:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "telethon"])
+    from telethon import TelegramClient, events, sync
 
 # VARIABLES
 channels = []
@@ -48,13 +55,18 @@ def ShowScanResult():
     print(keywords)
 
 #
-# Let`s make magic
+# LET`S MAKE SOME MAGIC
 #
-def main():
+def main(sc):
     ClearConsole()
     InitConnection()
     GetData()
     CheckKey()
     ShowScanResult()
 
-main()
+    s.enter(60, 1, main, (sc,))
+
+# WAIT TIMER
+s = sched.scheduler(time.time, time.sleep)
+s.enter(60, 1, main, (s,))
+s.run()
