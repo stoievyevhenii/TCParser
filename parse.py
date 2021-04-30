@@ -1,5 +1,5 @@
 # IMPORTS
-import subprocess, sys, sched, time, os
+import subprocess, sys, sched, time, os, argparse
 
 try:
     from telethon import TelegramClient, events, sync
@@ -12,22 +12,20 @@ channels = []
 keywords = {}
 s = sched.scheduler(time.time, time.sleep)
 
+
 # FUNCTIONS
-def GetKeysFromParams():
-    arguments = len(sys.argv) - 2
+def InitParams():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--keys', nargs='+',type=str)
+    parser.add_argument('--wait', nargs='+',type=int)
+    args = parser.parse_args()
 
-    if arguments <= 0:
-        sys.exit("Your keywords list is empty! Try again!")
+    keysList = args.keys
+    for key in keysList:
+        keywords['#' + key] = 0
 
-    position = 1
-    while (arguments >= position):
-        keywords[sys.argv[position]] = 0
-        position = position + 1
-
-def InitWaitTime():
     global waitTime
-    argumentsCount = len(sys.argv) - 1
-    waitTime = int(sys.argv[argumentsCount])
+    waitTime = args.wait[0]
 
 def ClearConsole():
     clear = lambda: os.system('cls')
@@ -71,18 +69,16 @@ def ShowScanResult():
 
 def StartScriptLogic(sc):
     ClearConsole()
-    print(keywords)
     InitConnection()
     GetData()
     CheckKey()
-    ShowScanResult()
+    ShowScanResult() #TODO: replace print to email send function
 
     s.enter(waitTime, 1, StartScriptLogic, (sc,))
 
 def main():
-    GetKeysFromParams()
-    InitWaitTime()
-    # WAIT TIMER
+    InitParams()
+
     s.enter(waitTime, 1, StartScriptLogic, (s,))
     s.run()
 
