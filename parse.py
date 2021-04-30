@@ -10,6 +10,7 @@ except:
     from telethon import TelegramClient, events, sync
 
 # VARIABLES
+waitTime = 60
 channels = []
 keywords = {
     "#art": 0,
@@ -64,9 +65,9 @@ def main(sc):
     CheckKey()
     ShowScanResult()
 
-    s.enter(60, 1, main, (sc,))
+    s.enter(waitTime, 1, main, (sc,))
 
 # WAIT TIMER
 s = sched.scheduler(time.time, time.sleep)
-s.enter(60, 1, main, (s,))
+s.enter(waitTime, 1, main, (s,))
 s.run()
