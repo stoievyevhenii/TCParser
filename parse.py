@@ -17,8 +17,11 @@ keywords = {}
 # FUNCTIONS
 def GetKeysFromParams():
     arguments = len(sys.argv) - 1
-    position = 1
 
+    if arguments <= 0:
+        sys.exit("Your keywords list is empty! Try again!")
+
+    position = 1
     while (arguments >= position):
         keywords[sys.argv[position]] = 0
         position = position + 1
