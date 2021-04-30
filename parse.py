@@ -16,8 +16,8 @@ s = sched.scheduler(time.time, time.sleep)
 # FUNCTIONS
 def InitParams():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--keys', nargs='+',type=str)
-    parser.add_argument('--wait', nargs='+',type=int)
+    parser.add_argument('--keys', nargs='+',type=str, help="List of keywords")
+    parser.add_argument('--wait', nargs='+',type=int, help="Wait time")
     args = parser.parse_args()
 
     keysList = args.keys
