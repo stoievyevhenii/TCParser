@@ -10,15 +10,19 @@ except:
     from telethon import TelegramClient, events, sync
 
 # VARIABLES
-waitTime = 60
+waitTime = 10
 channels = []
-keywords = {
-    "#art": 0,
-    "#black": 0,
-    "#city": 0
-}
+keywords = {}
 
 # FUNCTIONS
+def GetKeysFromParams():
+    arguments = len(sys.argv) - 1
+    position = 1
+
+    while (arguments >= position):
+        keywords[sys.argv[position]] = 0
+        position = position + 1
+
 def ClearConsole():
     clear = lambda: os.system('cls')
     clear()
@@ -58,16 +62,21 @@ def ShowScanResult():
 #
 # LET`S MAKE SOME MAGIC
 #
-def main(sc):
+
+def StartScriptLogic(sc):
     ClearConsole()
+    print(keywords)
     InitConnection()
     GetData()
     CheckKey()
     ShowScanResult()
+    s.enter(waitTime, 1, StartScriptLogic, (sc,))
 
-    s.enter(waitTime, 1, main, (sc,))
+def main():
+    GetKeysFromParams()
+    # WAIT TIMER
+    s = sched.scheduler(time.time, time.sleep)
+    s.enter(waitTime, 1, StartScriptLogic, (s,))
+    s.run()
 
-# WAIT TIMER
-s = sched.scheduler(time.time, time.sleep)
-s.enter(waitTime, 1, main, (s,))
-s.run()
+main()
