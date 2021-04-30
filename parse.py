@@ -1,8 +1,6 @@
 # IMPORTS
-import subprocess
-import sys
-import sched, time
-import os
+import subprocess, sys, sched, time, os
+
 try:
     from telethon import TelegramClient, events, sync
 except:
@@ -10,13 +8,13 @@ except:
     from telethon import TelegramClient, events, sync
 
 # VARIABLES
-waitTime = 10
 channels = []
 keywords = {}
+s = sched.scheduler(time.time, time.sleep)
 
 # FUNCTIONS
 def GetKeysFromParams():
-    arguments = len(sys.argv) - 1
+    arguments = len(sys.argv) - 2
 
     if arguments <= 0:
         sys.exit("Your keywords list is empty! Try again!")
@@ -25,6 +23,11 @@ def GetKeysFromParams():
     while (arguments >= position):
         keywords[sys.argv[position]] = 0
         position = position + 1
+
+def InitWaitTime():
+    global waitTime
+    argumentsCount = len(sys.argv) - 1
+    waitTime = int(sys.argv[argumentsCount])
 
 def ClearConsole():
     clear = lambda: os.system('cls')
@@ -73,12 +76,13 @@ def StartScriptLogic(sc):
     GetData()
     CheckKey()
     ShowScanResult()
+
     s.enter(waitTime, 1, StartScriptLogic, (sc,))
 
 def main():
     GetKeysFromParams()
+    InitWaitTime()
     # WAIT TIMER
-    s = sched.scheduler(time.time, time.sleep)
     s.enter(waitTime, 1, StartScriptLogic, (s,))
     s.run()
 
