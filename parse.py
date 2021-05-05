@@ -1,5 +1,10 @@
 # IMPORTS
-import subprocess, sys, sched, time, os, argparse
+import subprocess
+import sys
+import sched
+import time
+import os
+import argparse
 
 try:
     from telethon import TelegramClient, events, sync
@@ -19,16 +24,16 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-channels = {}
-keywords = {}
-waitTime = 10
+channels = dict()
+keywords = dict()
+WAIT_TIME = 2
 s = sched.scheduler(time.time, time.sleep)
 
 # FUNCTIONS
 def CheckKey():
     for channel in channels:
         print(bcolors.OKGREEN + "CHANNEL - " + channel + bcolors.ENDC)
-        for message in client.get_messages(channel, limit=20):
+        for message in client.get_messages(channel, limit=10):
             try:
                 for key in keywords:
                     if key in message.message:
@@ -84,14 +89,14 @@ def StartScriptLogic(sc):
     ShowScanResult()
     ResetKeysCounter()
 
-    s.enter(waitTime, 1, StartScriptLogic, (sc,))
+    s.enter(WAIT_TIME, 1, StartScriptLogic, (sc,))
 
 def main():
     ClearConsole()
     InitParams()
     InitConnection()
 
-    s.enter(waitTime, 1, StartScriptLogic, (s,))
+    s.enter(WAIT_TIME, 1, StartScriptLogic, (s,))
     s.run()
 
 main()
