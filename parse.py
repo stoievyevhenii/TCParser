@@ -59,14 +59,15 @@ def SetParam(paramForInit, destDictionary):
         item = item.replace('\n','')
         destDictionary[item] = 0
 
+def ClearKeywordsList():
+    keywords.clear()
+
 def InitParams():
     parser = argparse.ArgumentParser()
     parser.add_argument('--keys',type=str, help="List of keywords")
     parser.add_argument('--channels', type=str, help="List of channels")
+    global args
     args = parser.parse_args()
-
-    SetParam(paramForInit = args.keys, destDictionary = keywords)
-    SetParam(paramForInit = args.channels, destDictionary = channels)
 
 def ClearConsole():
     clear = lambda: os.system('cls')
@@ -76,6 +77,9 @@ def ClearConsole():
 #
 
 def StartScriptLogic(sc):
+    ClearKeywordsList()
+    SetParam(paramForInit = args.keys, destDictionary = keywords)
+    SetParam(paramForInit = args.channels, destDictionary = channels)
     CheckKey()
     ShowScanResult()
     ResetKeysCounter()
